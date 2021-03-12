@@ -1,0 +1,642 @@
+Welcome to server side programing (or) scripting.
+	Why do we need server side programming.
+
+We can create UI using HTML.
+	We can do dynamic websites using Javascript/Jquery
+	Then, why do we need a server side script?
+
+we cannot write client side scripts to access database.
+	
+The client side scripts run at client's machine. But database will not be present in every client machine at all.
+
+If entire project is done using client side script, then every client/user needs to download a copy of our software and use it locally. (like Apps)
+
+It is not good idea to ask users to download always.
+
+web applications that contain server side scripts will run at server.
+client side scripts run at client.
+
+If we display time using 
+	client side script, then the time of client's computer will be displayed
+	server side script, then the time of server's computer will be displayed
+
+Servlet:
+	is a java program that runs in the server.
+
+Lets create our first servlet.
+1) In sts/eclipse, we create a "Dynamic web project".
+	File ->	New	->	Dynamic web project
+
+2) After entering the project name, check the "Target runtime"
+	if "never" is chosen, we need to clicke
+	"New Runtime"
+
+	choose "Apache Tomcat v9.0"
+
+	click next and choose the folder "Apache tomcat folder" that contain "bin", "lib" etc
+
+3) Next -> Next
+
+4) click the checkbox "Generate web.xml deployment descriptor"
+
+Notice that the folders created:
+	"Java Resource"			
+		our java files will be stored here	(servlet is also a java file)
+		(out DAO programs are also java files. Interfaces also stored here)
+
+	"WebContent"
+		our html, css, js files will be stored here
+
+5) If it asks for opening a perspective choose to open the perspective.
+
+in eclipse/sts, a perspective displays the windows specific to a type of project.
+
+earlier it was java perspective. Now it is web perspective.
+
+we can choose a perspective any time using window -> perspective
+
+6) add new html file "index.html" by "right click project"
+
+WHENEVER WE RUN WEB APPLICATION, IF IT ASKS "Restart Server" ALWAYS CHOOSE TO RESTART ONLY.
+	NEVER run without restart at all. 
+
+When we run the project, we are seeing the output in browser.
+	But this is internal browser. 
+	We want to run this in Chrome browser.
+
+So choose chrome in 
+	window -> web browser menu
+
+Task:
+	create a html page that accepts 2 numbers as input.
+	There should be a submit and reset button
+
+--------------------------
+
+Now we have created html file that contains input elements.
+While submitting the "form" to a servlet, what happens?
+
+Lets understand Servlet:
+	i) Servlet is a java class
+		HttpServlet	
+	ii) it is derived from GenericServlet
+
+So the methods like 
+	init
+	service
+	destroy
+which are present in the super class "GenericServlet" can be overridden from HttpServlet
+
+Servlet gives us an advantage of executing java code using an "URL"
+
+I can do lot of programming tasks in java. Only thing, i should be able to call those java code using URL
+
+Servlets are java programs, that run on server, which can be called using URL
+
+Let us create our first Servlet program:
+1) Right click project
+	new -> servlet
+
+2) enter the package name and class name
+	give any package name 
+	ex:	controller, view			(MVC)
+
+	In MVC,
+	a Model is any code that
+		defines data
+		access data
+
+	a View is any code that
+		get input 
+		displays output
+
+	a controller is any code that allows view to connect with model.
+
+	If controller is not there, then view can access model directly but both "view" and "model" should be present in the same computer
+
+In a java project we created, console application. where view is created using Scanner and SYSO
+	Model was created using java code (model is always java class)
+	ex:	Associate.java		(defines data)
+		AssociateDao.java	(access data)
+
+3) After entering the
+	package name		(view/controller)
+	class name		(MyServlet)
+
+	we need to give a URL (this url is used to call the servlet)
+
+	we do "URL Mapping"
+
+a SERVLET can have any number of url mappings.
+	I can call a servlet "MyServlet" 
+	as 	ms, myservlet, servlet, ms1, etc etc if these url mappings are done
+
+
+from java EE 1.5 onwards, (annotations introduced), url mappings are done using annotations
+	@WebServlet("/MyServlet")		
+	@WebServlet({"/MyServlet","/ms"})			//2 url mappings done for 1 servlet
+
+http://localhost:8080/mar-12/ms
+
+http://			protocol
+localhost		server ip address
+8080			port number in which apache tomcat runs
+mar-12			context root		(same as project name)
+ms			servlet alias
+
+---------------------------------------------------------------------------------------------
+
+till java 1.4 version (annotations were not introduced)
+we configured servlets only using deployment descriptor 	(web.xml)
+
+WE Specify that 
+	this class is playing the role of Servlet
+
+lets create a web application in version 1.4	(web module 2.2)
+
+after creating an old web application,
+	open the "web.xml" file (WebContent ->WEB-INF )
+	click the "source" tab in the bottom
+
+	so far there are no servlets configured in this web.xml file.
+
+	Lets create a servlet.
+
+
+Notice the web.xml has made lot of entries in response to the newly created servlet
+
+	servlet name + servlet class 
+
+	servlet name + mapping
+
+
+	<servlet>
+		<servlet-name>MyServlet</...
+		<servlet-class>controller.MyServlet</...
+	</...
+
+	<servlet-mapping>
+		<servlet-name>MyServlet</....
+		<url-pattern>/MyServlet</...
+==========================
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+<web-app id="WebApp_ID">
+	<display-name>to-delete</display-name>
+	<servlet>
+		<servlet-name>MyServlet</servlet-name>
+		<display-name>MyServlet</display-name>
+		<description></description>
+		<servlet-class>controller.MyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MyServlet</servlet-name>
+		<url-pattern>/MyServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>MyServlet</servlet-name>
+		<url-pattern>/ms</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>MyServlet</servlet-name>
+		<url-pattern>/jag</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>
+
+------------------------
+Task:
+	Create a new web application in web module 2.2
+
+	Add new servlet "StudentServlet"
+	in web.xml, add a mapping "ss" to this servlet.
+	run the project with this "ss" and check.
+
+
+-------------------------------------------------------
+To add web.xml file later into a web project, 
+	right click -> Java EE tools -> generate deployment descriptor stub
+------------------------------------------------------
+
+If we notice, we create a servlet class but we never create object.
+
+So, who is creating the objects for servlet class????
+	in server, there is a component called, "Container"
+	Container manages the life cycle of a servlet.
+
+who is this container?		(is a special JVM)	
+	in any application, there are 
+		i) generic services			(container)
+		ii) application specific services	(we will take care)
+
+web servers (personal web server, peer web server) they just provide space to 
+	store our web pages.	They do not provide runtime for running our code
+	Java program cannot run in those servers.
+
+web "application" server.	(app servers)
+	they provide runtime environment for our java programs to run.
+	In web server, if there is a container, then it is called as app server
+
+
+What is the life cycle of Servlet?
+	construction / instantiation		
+	initialization
+	service
+	destroy
+
+
+construction / instantiation:
+	container creates not 1 object when required. 
+	container creates pool of instance		(instance pool)
+
+initialization
+	there is a method in servlet 
+		init() method
+	this method is called.	Only once in the life cycle of a servlet.
+
+service method
+	every time, the url is called either
+		from a browser address bar
+		from html form
+		from another servlet/jsp
+
+	every time, a servlet is called, the service method is invoked.
+		the service method will decide which of the following to be invoked
+		doGet()
+		doPost()
+
+destroy
+	only once in the life cycle and when we undeploy a project from server. All servlets in the project are destroyed
+
+
+Lets see these methods in servlet class.
+	we see 
+		doGet
+		doPost
+
+		methods
+	we can bring 
+		init
+		destroy
+		methods by right click -> source -> override / implement -> from Generic servlet  lass
+
+--------------------
+Reading request data from html
+	A Servlet can get inputs by using 
+		HttpServletRequest
+	A Servlet can give outputs by using
+		HttpServletResponse
+
+	These objects are available as paramter for the service methods
+		doGet
+		doPost
+
+	Lets choose these methods
+
+	what is the different GET and POST?
+	
+	Whenever we call a servlet from Browser address bar, it will hit only GET method
+	the default method of any form is "GET" method only
+
+	<form>			we have not mentioned method, so it is "GET" method
+
+	<form method="POST">	this form when submitted, reaches the doPost method of servlet
+
+
+Postman tool to access servlet from get/post
+----------
+Task:
+	create a html file and add a form that submits to the servlet in
+		GET
+		POST
+
+both of them displays a message.
+	Observe the difference, that which of the 
+		doGET
+		doPost
+	methods are called corresponding to the form method
+
+use Submit button 	(not button)
+
+------------------------
+Lets understand the 2 parameters of the service method (doGet / doPost)
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	request object is used to get any INPUT
+	response object is used to give any OUTPUT
+
+What input?
+	the HTML file may have input elements
+
+<form method="GET" action="MyServlet">
+	Number 1: <input type=number name="no1" /><br/>
+	Number 2: <input type=number name="no2" /><br/>
+	<input type=submit />
+</form>
+
+wHEN we submit the form, (GET), look at the address bar.
+
+http://localhost:8080/mar-12-1/MyServlet?no1=23&no2=45
+http://localhost:8080/mar-12-1/MyServlet?no1=11&no2=22
+
+
+
+http://localhost:8080/mar-12-1/MyServlet
+UPTO above portion is already understood.
+
+remaining
+
+?		marks the beginning of the query string
+
+Query String
+?key1=value1&key2=value2
+
+we are getting all inputs as key-value pair of query strings in address bar.
+
+How to capture these inputs from a Servlet?
+
+	int x=request.getParameter("no1");
+	int y=request.getParameter("no2");
+
+--------------------------------
+
+Task:
+	accept the user name and password from the user using HTML form.
+	On submitting the form, a servlet should validate the login.
+	if user name and password are same then 
+		display "Login failed"
+	else
+		display "Login successful"
+
+
+---------------------------
+
+Task:
+	Create a html page that accepts 2 numbers as input and
+	one dropdown list with options:	"Add", "Subtract", "Multiply", "Divide"
+	on submit, 
+	the output should be displayed based on the chosen option.
+
+<form action="maths">
+	Number 1: <input type=number name="no1" /><br/>
+	Number 2: <input type=number name="no2" /><br/>
+	<select name="op">
+		<option>Choose...</option>
+		<option>Add</option>
+		<option>Subtract</option>
+		<option>Multiply</option>
+		<option>Divide</option>		
+	</select>
+	<input type=submit /><input type=reset />
+</form>
+
+
+	int no1=Integer.parseInt(request.getParameter("no1"));
+		int no2=Integer.parseInt(request.getParameter("no2"));
+		String op=request.getParameter("op");
+		float result=0.0f;
+		PrintWriter out = response.getWriter();
+		switch(op)
+		{
+		case "Add":
+			result=no1+no2;
+			break;
+		case "Subtract":
+			result=no1-no2;
+			break;
+		case "Multiply":
+			result=no1*no2;
+			break;
+		case "Divide":
+			result=(float)no1/no2;
+			break;
+		default:
+			out.print("Choose an operation");
+		}
+		out.print("Result:"+result);
+
+--------------------------------------------
+tASK:
+	Accept multiple inputs from the user using check boxes. 
+	On submitting, all the checked options should be displayed by the servlet.
+
+	Hint:
+		String arr[]=request.getParameterValues("name");
+
+
+Sports<br/>Games<br/>
+
+the above html code is displayed as text by servlet. <Br/> is not processed as html element.
+This is because, the 	content type (MIME type) of Servlet is "text/plain" by default.
+We can change the content type to "text/html"
+
+response.setContentType("text/html");
+
+one of the life cycle methods of Servlet is 
+	init()
+
+we can use init method to obtain some information from web.xml file or annotation
+
+<servlet>
+		<servlet-name>MyServlet</servlet-name>
+		<display-name>MyServlet</display-name>
+		<description></description>
+		<servlet-class>view.MyServlet</servlet-class>
+		<init-param>
+			<param-name>companyName</param-name>
+			<param-value>ABC corporation</param-value>
+			<description></description>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MyServlet</servlet-name>
+		<url-pattern>/MyServlet</url-pattern>
+	</servlet-mapping>
+
+
+using annotation:
+--------------------
+
+@WebServlet(
+		urlPatterns = { "/AnotherServlet" }, 
+		initParams = { 
+				@WebInitParam(name = "companyName", value = "XYZ corporation")
+		})
+public class AnotherServlet extends HttpServlet
+
+
+
+
+
+parameter of init method is 
+	ServletConfig		- represents the Servlet
+
+
+we observed that	
+	init() method executed only in the beginning and only once in the life cycle of servlet
+	destroy() method executed only once in the life cycle of servlet. when we undeploy the project from the server
+--------------------------------------------------------
+Servlet scopes:
+-----------------
+
+There is a login page.
+	User enters the user name and password.
+	If login is successful, we display Home page
+	else	we display error message and give a link to go back to login page and try again.
+
+	In the home page, we should welcome the user by their username
+
+
+from LoginServlet, 
+	how to redirect to Home page?
+		response.sendRedirect("home");			//home is the url mapping for HomeServlet
+
+we are able to redirect from LoginServlet to HomeServlet.	How to share the information (username) from one servlet to another servlet?
+
+
+While redirecting, we re write the url 
+		response.sendRedirect("home?username="+username);
+
+
+
+how to include output from another servlet, by staying in the same servlet
+	instead of using response.sendRedirect, we are going to use RequestDispatcher
+		include
+		forward
+
+
+1) click here to go back to login page.		Here, the user action (click) was required to redirect
+2) response.sendRedirect			just redirect to another page
+3) RequestDispatcher	
+	forward					forward the (req, res) to another servlet
+	include					include the output of another servlet, by staying here itself
+
+
+----------------------------------
+Task:
+	Accept the dateOfJoining as input from the user.
+	If the date is future date, display error and let the user try again.
+	If date is present or past, it is valid date. Display the age/ years of exp in the home page
+
+	hint1:	use sendRedirect
+	hint2:	use forward
+	hint3:	use include
+
+
+	on success, display some message in first servlet also and second servlet also
+
+-------------
+Servlet scopes:
+	ServletContext
+	ServletConfig
+	
+what is the difference between these 2 interfaces?
+
+ServletConfig:
+	this is an object representation of Servlet tag in web.xml
+	this represents the current servlet configuration in the web.xml
+	useful to get init parameter
+
+	Scope is limited to one servlet
+
+ServletContext:
+	this is an object representation of entire web application
+	servlet context = application
+
+	scope is entire project.	If we store any information in servlet context, then it is available in entire application
+
+Notice that, we can get reference to the servlet context from any servlet:
+	getServletContext() method
+
+In JSP, this servlet context object is ready made object	(application)
+
+-------------------------
+Lets see how we can use this servlet context for sharing information across many pages in same application.
+
+			ServletContext context = getServletContext();
+			context.setAttribute("username", username);		//value can be any object					response.sendRedirect("home");
+
+
+you can store any number of attributes into an application (ServletContext)
+	key-value pairs
+
+and from any other servlet, we can get those attributes
+		
+the scope of ServletContext is anywhere in the same application. Any session also
+
+
+Now what is meant by session management?
+	is a technique to retain some information between round trips.
+	when a user enters the data in the form input elements, a submit causes the data to vanish. 
+
+ex:
+	in login form, user enters the 
+		username 
+		password
+	if login is failed, we can redirect to the login page. But the entered username is not visible now.
+	
+This is because, HTTP is a stateless protocol.
+
+Hence we need to use session management techniques
+	Client side techniques
+		hidden form field
+		cookies
+		url re-writing	(query string)		?key1=value1&key2=value2
+	Server side techniques
+		HttpSession
+		ServletContext
+
+in HTML + Servlet programming,
+we are able to use only Submit button
+
+except submit button, we are not able to send request to a servlet.
+suppose, a dropdownlist is there,
+	when i choose an option in the drop down list, immediately i should get some response. 
+	This is not possible without a client side script like javascript
+
+	we will learn to use javascript to call a servlet (AJAX) later
+
+while learning JSP, we will learn to use Hidden form field
+
+URL re-writing, already we have used it
+	response.sendRedirect("home?username="+username);		//url re-writing 	or 	query string
+
+Cookies:
+	cookies are text files that are stored in the clients machine by server side script. 
+	
+	ex:	before redirecting from one page to another, we can store some information in cookies. and take that information from cookies at second page.
+
+	response.addCookie()		to create a cookie in client's computer
+
+	to retrieve a cookie, there is no method. so
+	we need to retrieve all cookies as an array
+		for(Cookie c:cookies)
+		{
+			if(c.getName().equals("msg"))
+			{
+				value=c.getValue();
+			}
+		}
+---------------------
+
+Task:
+	create a new project.
+	1) a html file to get user name as input 
+	2) on submit, the servlet "one" should get this input and store it in a cookie
+	3) create another servlet "two" which should be able to find the cookie and display the value
+
+Hint:
+	create an object of cookie		cookie name and value
+	set max age to 2 days		(millisecond)
+	add cookie using response object
+
+	get all cookies using request object
+	find cookie by name
+	get value and display
